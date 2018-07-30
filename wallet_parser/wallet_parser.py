@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import os
-import socket
 import collections
+import os
 
 from bsddb3 import db
-from binascii import hexlify
 
 from .bc_data_stream import BCDataStream
 
@@ -38,9 +36,9 @@ class WalletParser:
         for key, value in self.wallet_data.items():
             kds = BCDataStream(key)
             vds = BCDataStream(value)
-            type = kds.read_string().decode()
+            _type = kds.read_string().decode()
 
-            if type == 'name':
+            if _type == 'name':
                 label = vds.read_string().decode()
                 address = kds.read_string().decode()
                 self.data[label].append(address)

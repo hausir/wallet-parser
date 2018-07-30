@@ -4,6 +4,7 @@ import argparse
 
 from .wallet_parser import WalletParser
 
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('-d', '--dat', help='wallet.dat path', required=True, dest='filename')
@@ -19,6 +20,7 @@ def main():
             label = '(no label)'
         for address in addresses:
             print('| %12s | %34s |' % (label, address))
+
 
 if __name__ == '__main__':
     main()

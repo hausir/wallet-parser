@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 
+import struct
 import sys
 
 assert sys.version_info[0] == 3  # TODO: Use six for 2/3 compat
-
-# From Joric's pywallet.
-
-import struct
 
 
 class SerializationError(Exception):
@@ -14,8 +11,8 @@ class SerializationError(Exception):
 
 
 class BCDataStream(object):
-    def __init__(self, input):
-        self.input = bytes(input)
+    def __init__(self, _input):
+        self.input = bytes(_input)
         self.read_cursor = 0
 
     def read_string(self):
@@ -73,7 +70,7 @@ class BCDataStream(object):
             size = self._read_num('<Q')
         return size
 
-    def _read_num(self, format):
-        (i,) = struct.unpack_from(format, self.input, self.read_cursor)
-        self.read_cursor += struct.calcsize(format)
+    def _read_num(self, _format):
+        (i,) = struct.unpack_from(_format, self.input, self.read_cursor)
+        self.read_cursor += struct.calcsize(_format)
         return i
