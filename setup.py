@@ -2,13 +2,13 @@
 
 from setuptools import setup, find_packages
 
-VERSION = '0.0.1'
+VERSION = '0.0.2'
 
 setup(
     name='wallet-parser',
     version=VERSION,
     license='MIT',
-    description='parse wallet.dat file to get receiving addresses',
+    description='parse wallet.dat file to get addresses',
     url='https://github.com/hausir/wallet-parser',
     author='hausir',
     author_email='hausir@icloud.com',

@@ -12,7 +12,7 @@ class WalletParser:
 
     def __init__(self, filename):
         self.filename = filename
-        self.data = collections.defaultdict(list)
+        self.addresses = collections.defaultdict(lambda: collections.defaultdict(list))
         self.init()
 
     def init(self):
@@ -28,12 +28,11 @@ class WalletParser:
         d = db.DB(env)
         d.open(filename, 'main', db.DB_BTREE, db.DB_THREAD | db.DB_RDONLY)
 
-        self.wallet_data = collections.OrderedDict((k, d[k]) for k in d.keys())
+        wallet_data = collections.OrderedDict((k, d[k]) for k in d.keys())
 
-    def get_receiving_addresses(self):
-        """解析标签和地址"""
-
-        for key, value in self.wallet_data.items():
+        data = {}
+        purpose = collections.defaultdict(list)
+        for key, value in wallet_data.items():
             kds = BCDataStream(key)
             vds = BCDataStream(value)
             _type = kds.read_string().decode()
@@ -41,6 +40,28 @@ class WalletParser:
             if _type == 'name':
                 label = vds.read_string().decode()
                 address = kds.read_string().decode()
-                self.data[label].append(address)
+                data[address] = label
+            elif _type == "purpose":
+                category = vds.read_string().decode()
+                address = kds.read_string().decode()
+                purpose[category].append(address)
 
-        return self.data
+        for address, label in data.items():
+            for category, addresses in purpose.items():
+                if address in addresses:
+                    self.addresses[category][label].append(address)
+
+    def get_addresses(self):
+        """获取所有地址"""
+
+        return self.addresses
+
+    def get_receiving_addresses(self):
+        """获取收款地址"""
+
+        return self.addresses.get("receive")
+
+    def get_sending_addresses(self):
+        """获取收款地址"""
+
+        return self.addresses.get("send")
